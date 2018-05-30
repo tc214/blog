@@ -9,7 +9,7 @@
 ####   使用场景 Why to use   
 主要用于构造一个复杂的对象，如参数非常多，且很多参数都有默认值。  
 
-####  使用示例   example  
+####  使用示例一   example1  
 ```java  
 package org.tc.builder;
 
@@ -90,6 +90,88 @@ public class TestBuilder {
   
 运行结果：  
 Board:ASUS, Display:LG, OS:Windows  
+
+
+####  静态内部类实现   
+```java   
+package org.tc.builder;
+
+public class Computer extends Product {
+
+	private String board;
+	private String os;
+	private String display;
+	
+	
+	public Computer() {}
+	
+	public Computer(String board2, String os2, String display2) {
+		setBoard(board2);
+		setOs(os2);
+		setDisplay(display2);
+	}
+
+	@Override
+	public void setBoard(String board) {
+		this.board = board;
+	}
+
+	@Override
+	public void setOs(String os) {
+		this.os = os;
+	}
+
+	@Override
+	public void setDisplay(String display) {
+		this.display = display;
+	}
+
+	@Override
+	public String toString() {
+		return "Board:" + this.board + ", " + "Display:" + this.display + ", " + "OS:" +  this.os;
+	}
+
+	
+	
+	public static class BuilderInner {
+		private String board;
+		private String os;
+		private String display;
+		
+		public Computer.BuilderInner setBoard(String b) {
+			this.board = b;
+			return this;
+		}
+		
+		public Computer.BuilderInner setOs(String os) {
+			this.os = os;
+			return this;
+		}
+		
+		public Computer.BuilderInner setDisplay(String display) {
+			this.display = display;
+			return this;
+		}
+		
+		public Computer create() {
+			return new Computer(this.board, this.os, this.display);
+		}	
+	}	
+}
+
+public class TestBuilder {
+
+	public static void main(String[] args) {
+		Computer computer = new Builder().setBoard("ASUS").setOs("Windows").setDisplay("LG").create();
+		System.out.println(computer);
+		
+		// new implement  
+		Computer com = new Computer.BuilderInner().setBoard("ASUS").setOs("Windows").setDisplay("LG").create();
+		System.out.println(com);
+	}
+}
+
+```  
 
 
 
